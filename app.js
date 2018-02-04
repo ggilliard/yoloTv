@@ -3,30 +3,30 @@ const logger = require('morgan');
 const request = require('request-promise');
 const exphbs  = require('express-handlebars');
 const favicon = require('serve-favicon');
-const path = require('path');
 const app = express();
-const clientId = require('./api_key')
+const clientId = require('./api_key.js')
 
 app.use(logger('dev'));
 app.engine('handlebars', exphbs({defaultLayout: 'index'}));
 app.set('view engine', 'handlebars');
-app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node.modules/jquery/dist/'));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 
+function getData(APIKEY, LINEUPID) {
+    var url = `https://www.xmltvlistings.com/xmltv/get/${APIKEY}/${LINEUPID}`
 
-function getShows() {
-    return request({
-      url: 'https://www.xmltvlistings.com/xmltv/get/',
-      qs: {
-        s: 'friends',
-        apikey: clientId,
-        lineupId: 2961,
-      }
+    return request({url:url},function(err,response, body) {
+        return response;
+    });
+}
+
+app.get('/', function (req, res) {
+    getData(clientId.clientId, 2961).then(function(data){
+        // console.log(data);
     })
-  }
-
-console.log(getShows);
-       
+    res.send(data)
+});
+           
 app.listen(3000)
+    
+    
