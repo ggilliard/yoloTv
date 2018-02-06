@@ -47,6 +47,12 @@ function getShowSeries(token, series) {
     });
 }
 
+function normalizeShows(data) {
+  const showSeriesName = data.data[0].seriesName;
+
+  return showSeriesName;
+}
+
 app.get('/:series', function(req, res) {
   const series = req.params.series;
   let _jwt_token;
@@ -58,6 +64,9 @@ app.get('/:series', function(req, res) {
       return getShowSeries(_jwt_token, 'this is us')
     })
     .then(function(data) {
+
+      normalizeShows(data);
+
       res.send(data);
     })
 })
