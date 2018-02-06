@@ -40,7 +40,7 @@ function getRequestOptions(url, token, queryOptions = {}) {
 }
 
 function getShowSeries(token, series) {
-    var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: 'this is us' })
+    var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: series })
 
     return request(options).then(function(seriesData) {
         return seriesData;
@@ -55,7 +55,7 @@ app.get('/:series', function(req, res) {
     .then(function(token) {
       _jwt_token = token;
 
-      return getShowSeries(_jwt_token, series)
+      return getShowSeries(_jwt_token, 'this is us')
     })
     .then(function(data) {
       res.send(data);
