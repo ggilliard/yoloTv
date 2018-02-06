@@ -61,15 +61,18 @@ app.get('/:series', function(req, res) {
     .then(function(token) {
       _jwt_token = token;
 
-      return getShowSeries(_jwt_token, 'this is us')
+      return getShowSeries(_jwt_token, series)
     })
     .then(function(data) {
+      const showSeriesName = data.data[0].seriesName;
 
-      normalizeShows(data);
-
-      res.send(data);
+        return getShowName(name)
     })
-})
+    const result = {
+      name: getShowName
+    }
+    res.render('shows', result);
+  })
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
