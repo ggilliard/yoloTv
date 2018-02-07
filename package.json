@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+<<<<<<< HEAD
+=======
+
+    "express-handlebars": "^3.0.0",
+>>>>>>> f4798a116866115098ab558e5e87203d9c423a52
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "morgan": "^1.9.0",
@@ -12,6 +17,17 @@
     "serve-favicon": "^2.4.5"
   },
   "devDependencies": {},
+
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "serve-favicon": "^2.4.5"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.0"
+  },
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
