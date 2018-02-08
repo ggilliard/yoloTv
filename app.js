@@ -74,6 +74,7 @@ function normalizeShows(data) {
 }
 
 
+<<<<<<< HEAD
 function normalizeShows(data) {
     const showSeriesName = data.data[0].seriesName;
   
@@ -98,6 +99,17 @@ function normalizeShows(data) {
         res.render('shows', showData);
       })
   });
+=======
+      return getShowSeries(_jwt_token, series)
+    })
+    .then(function(data) {
+      const showData = normalizeShows(data)
+
+      // console.log(showData)
+      res.render('shows', showData);
+    })
+});
+>>>>>>> bb873a3ca7c44d1b61344f8d57bc93d2adef9689
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
