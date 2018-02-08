@@ -14,7 +14,7 @@ const {
 const app = express();
 
 app.use(logger('dev'));
-app.engine('handlebars', exphbs({defaultLayout: 'index'}));
+app.engine('handlebars', exphbs({ defaultLayout: 'index' }));
 app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
@@ -85,11 +85,11 @@ app.get('/:series', function(req, res) {
     })
     .then(function(data) {
       const showData = normalizeShows(data)
+
       // console.log(showData)
-      return showData;
+      res.render('shows', showData);
     })
-  res.render('shows');
-})
+});
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
