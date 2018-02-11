@@ -55,6 +55,7 @@ function normalizeShows(show) {
   const {
       seriesName: nameOfSeries,
       id: seriesId,
+      network: network,
       banner: image,
       overview: synopsis
   } = show;
@@ -62,6 +63,7 @@ function normalizeShows(show) {
   return {
     nameOfSeries,
     seriesId,
+    network,
     image,
     synopsis
   }
