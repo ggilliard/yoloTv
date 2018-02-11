@@ -14,7 +14,9 @@ const {
 const app = express();
 
 app.use(logger('dev'));
-app.engine('handlebars', exphbs({ defaultLayout: 'index' }));
+app.engine('handlebars', exphbs({
+  defaultLayout: 'index'
+}));
 app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
@@ -49,6 +51,26 @@ function getRequestOptions(url, token, queryOptions = {}) {
   return options;
 }
 
+function normalizeShows(show) {
+  // const seriesName = data.data[0].seriesName;
+
+  const {
+    seriesName: nameOfSeries,
+    id: seriesId,
+    network: network,
+    banner: image,
+    overview: synopsis
+  } = show;
+
+  return {
+    nameOfSeries,
+    seriesId,
+    network,
+    image,
+    synopsis
+  }
+}
+
 // displaying all data from series
 function getShowSeries(token, series) {
   var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: series })
@@ -56,22 +78,6 @@ function getShowSeries(token, series) {
   return request(options).then(function(seriesData) {
     return seriesData;
   });
-}
-
-function normalizeShows(show) {
-  // const seriesName = data.data[0].seriesName;
-
-  const {
-      seriesName: nameOfSeries,
-      id: seriesId,
-      overview: synopsis
-  } = show;
-
-  return {
-    nameOfSeries,
-    seriesId,
-    synopsis
-  }
 }
 
   app.get('/:series', function(req, res) {
@@ -101,3 +107,4 @@ function normalizeShows(show) {
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
+});

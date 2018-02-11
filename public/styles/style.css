@@ -26,4 +26,18 @@ body {
     margin-top: 8px;
     margin-right: 84%;
     font-size: 17px;
+    background-color: coral;
+    border-radius: 12px;
+}
+
+.buttons {
+    background-color: coral;
+    font-size: 16px;
+    position: relative;
+    left: 92%;
+    bottom: 35px;
+    padding: 6px;
+    border-radius: 12px;
+
+
 }
