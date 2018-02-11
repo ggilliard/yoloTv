@@ -3,6 +3,12 @@ const logger = require('morgan');
 const request = require('request-promise');
 const exphbs = require('express-handlebars');
 const favicon = require('serve-favicon');
+const bodyParser = require('body-parser')
+const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 const path = require('path');
 const {
   clientId,
@@ -10,7 +16,6 @@ const {
   clientUsername
 } = require('./api_key');
 
-const app = express();
 
 app.use(logger('dev'));
 app.engine('handlebars', exphbs({
@@ -20,7 +25,6 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 
 var authOptions = {
   url: 'https://api.thetvdb.com/login',
@@ -70,28 +74,33 @@ function normalizeShows(show) {
     synopsis
   }
 }
+
 // displaying all data from series
 function getShowSeries(token, series) {
-  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, {
-    name: series
-  })
+  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: series })
 
   return request(options).then(function(seriesData) {
     return seriesData;
   });
 }
 
-app.get('/:series', function(req, res) {
-  const series = req.params.series;
-  let _jwt_token;
+app.get("/", function (req, res) {
+  res.render('search');
 
+});
+
+app.post("/search", function(req, res){
+  var series = req.body.userInput;
+
+  let _jwt_token;
+  
   getJwtToken()
     .then(function(token) {
       _jwt_token = token;
-
+  
       // console.log(token)
-      return getShowSeries(_jwt_token, series)
-    })
+        return getShowSeries(_jwt_token, series)
+      })
     .then(function(showSeries) {
       const showData = showSeries.data.map(function(show) {
         return normalizeShows(show);
@@ -100,12 +109,13 @@ app.get('/:series', function(req, res) {
       const result = {
         show: showData
       }
-
-      // console.log(showSeries.data);
+  
+       // console.log(showSeries.data);
       res.render('shows', result);
-    })
-});
+      })
+})
 
+  
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
 });
