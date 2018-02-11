@@ -49,29 +49,43 @@ function getRequestOptions(url, token, queryOptions = {}) {
   return options;
 }
 
+function normalizeShows(show) {
+  // const seriesName = data.data[0].seriesName;
+
+  const {
+      seriesName: nameOfSeries,
+      id: seriesId,
+      banner: image,
+      overview: synopsis
+  } = show;
+
+  return {
+    nameOfSeries,
+    seriesId,
+    image,
+    synopsis
+  }
+}
+// displaying all data from series
 function getShowSeries(token, series) {
-  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, {
-    name: series
-  })
+  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: series })
 
   return request(options).then(function(seriesData) {
     return seriesData;
   });
 }
 
-function normalizeShows(data) {
-  // const seriesName = data.data[0].seriesName;
-
-  const {
-    data: [{
-      seriesName: nameOfSeries
-    }]
-  } = data;
-
-  return {
-    nameOfSeries
-  }
-}
+// function getShowSeries(token, seriesId) {
+//   var options = getRequestOptions(`https://api.thetvdb.com/series/${seriesId}/images/query`, token, { keyType: 'fanart' });
+//
+//   return request(options).then(function(seriesImage) {
+//
+//     console.log(options);
+//     return seriesImage;
+//
+//     console.log(seriesImage);
+//   });
+// }
 
 app.get('/:series', function(req, res) {
   const series = req.params.series;
@@ -81,13 +95,20 @@ app.get('/:series', function(req, res) {
     .then(function(token) {
       _jwt_token = token;
 
+      // console.log(token)
       return getShowSeries(_jwt_token, series)
     })
-    .then(function(data) {
-      const showData = normalizeShows(data)
+    .then(function(showSeries) {
+      const showData = showSeries.data.map(function(show) {
+        return normalizeShows(show);
+      })
 
-      // console.log(showData)
-      res.render('shows', showData);
+      const result = {
+        show: showData
+      }
+
+       // console.log(showSeries.data);
+      res.render('shows', result);
     })
 });
 
