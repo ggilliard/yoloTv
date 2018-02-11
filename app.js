@@ -1,15 +1,24 @@
 const express = require('express');
 const logger = require('morgan');
 const request = require('request-promise');
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
 const favicon = require('serve-favicon');
 
 const path = require('path');
-const { clientId, userKey, clientUsername } = require('./api_key');
+const {
+  clientId,
+  userKey,
+  clientUsername
+} = require('./api_key');
 
 const app = express();
 
 app.use(logger('dev'));
+app.engine('handlebars', exphbs({defaultLayout: 'index'}));
+app.set('view engine', 'handlebars');
+app.use(express.static('public'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 var authOptions = {
   url: 'https://api.thetvdb.com/login',
@@ -23,29 +32,45 @@ var authOptions = {
 };
 
 function getJwtToken() {
-    return request(authOptions).then(function(data) {
-       return data.token;
-    })
+  return request(authOptions).then(function(data) {
+    return data.token;
+  })
 }
 
 function getRequestOptions(url, token, queryOptions = {}) {
   var options = {
-      url: url,
-      qs: queryOptions,
-      headers: {
-          'Authorization': `Bearer ${token}`
-      },
-      json: true
+    url: url,
+    qs: queryOptions,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    json: true
   };
   return options;
 }
 
 function getShowSeries(token, series) {
-    var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: 'this is us' })
+  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, {
+    name: series
+  })
 
-    return request(options).then(function(seriesData) {
-        return seriesData;
-    });
+  return request(options).then(function(seriesData) {
+    return seriesData;
+  });
+}
+
+function normalizeShows(data) {
+  // const seriesName = data.data[0].seriesName;
+
+  const {
+    data: [{
+      seriesName: nameOfSeries
+    }]
+  } = data;
+
+  return {
+    nameOfSeries
+  }
 }
 
 app.get('/:series', function(req, res) {
@@ -59,38 +84,13 @@ app.get('/:series', function(req, res) {
       return getShowSeries(_jwt_token, series)
     })
     .then(function(data) {
-      res.send(data);
+      const showData = normalizeShows(data)
+      // console.log(showData)
+      return showData;
     })
+  res.render('shows');
 })
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
 });
-
-const app = express();
-const clientId = require('./api_key.js')
-
-app.use(logger('dev'));
-app.engine('handlebars', exphbs({defaultLayout: 'index'}));
-app.set('view engine', 'handlebars');
-app.use('/jquery', express.static(__dirname + '/node.modules/jquery/dist/'));
-
-
-function getData(APIKEY, LINEUPID) {
-    var url = `https://www.xmltvlistings.com/xmltv/get/${APIKEY}/${LINEUPID}`
-
-    return request({url:url},function(err,response, body) {
-        return response;
-    });
-}
-
-app.get('/', function (req, res) {
-    getData(clientId.clientId, 2961).then(function(data){
-        // console.log(data);
-    })
-    res.send(data)
-});
-           
-app.listen(3000)
-    
-    
