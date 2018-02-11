@@ -3,6 +3,7 @@ const logger = require('morgan');
 const request = require('request-promise');
 const exphbs = require('express-handlebars');
 const favicon = require('serve-favicon');
+
 const path = require('path');
 const {
   clientId,
@@ -18,7 +19,6 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 
 var authOptions = {
   url: 'https://api.thetvdb.com/login',
@@ -49,38 +49,31 @@ function getRequestOptions(url, token, queryOptions = {}) {
   return options;
 }
 
+// displaying all data from series
 function getShowSeries(token, series) {
-  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, {
-    name: series
-  })
+  var options = getRequestOptions('https://api.thetvdb.com/search/series', token, { name: series })
 
   return request(options).then(function(seriesData) {
     return seriesData;
   });
 }
 
-function normalizeShows(data) {
+function normalizeShows(show) {
   // const seriesName = data.data[0].seriesName;
 
   const {
-    data: [{
-      seriesName: nameOfSeries
-    }]
-  } = data;
+      seriesName: nameOfSeries,
+      id: seriesId,
+      overview: synopsis
+  } = show;
 
   return {
-    nameOfSeries
+    nameOfSeries,
+    seriesId,
+    synopsis
   }
 }
 
-
-// function normalizeShows(data) {
-//     const showSeriesName = data.data[0].seriesName;
-  
-//     return showSeriesName;
-//   }
-    
-  
   app.get('/:series', function(req, res) {
     const series = req.params.series;
     let _jwt_token;
@@ -89,16 +82,22 @@ function normalizeShows(data) {
       .then(function(token) {
         _jwt_token = token;
   
+      // console.log(token)
         return getShowSeries(_jwt_token, series)
       })
-      .then(function(data) {
-        const showData = normalizeShows(data)
+    .then(function(showSeries) {
+      const showData = showSeries.data.map(function(show) {
+        return normalizeShows(show);
+      })
+
+      const result = {
+        show: showData
+      }
   
-        // console.log(showData)
-        res.render('shows', showData);
+       // console.log(showSeries.data);
+      res.render('shows', result);
       })
   });
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
-});
