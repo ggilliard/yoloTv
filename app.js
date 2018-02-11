@@ -3,7 +3,6 @@ const logger = require('morgan');
 const request = require('request-promise');
 const exphbs = require('express-handlebars');
 const favicon = require('serve-favicon');
-
 const path = require('path');
 const {
   clientId,
@@ -19,6 +18,7 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 
 var authOptions = {
   url: 'https://api.thetvdb.com/login',
@@ -77,14 +77,8 @@ function getShowSeries(token, series) {
   });
 }
 
-app.get('/:series', function(req, res) {
-  const series = req.params.series;
-  let _jwt_token;
 
-  getJwtToken()
-    .then(function(token) {
-      _jwt_token = token;
-
+<<<<<<< HEAD
       // console.log(token)
       return getShowSeries(_jwt_token, series)
     })
@@ -101,6 +95,32 @@ app.get('/:series', function(req, res) {
       res.render('shows', result);
     })
 });
+=======
+// function normalizeShows(data) {
+//     const showSeriesName = data.data[0].seriesName;
+  
+//     return showSeriesName;
+//   }
+    
+  
+  app.get('/:series', function(req, res) {
+    const series = req.params.series;
+    let _jwt_token;
+  
+    getJwtToken()
+      .then(function(token) {
+        _jwt_token = token;
+  
+        return getShowSeries(_jwt_token, series)
+      })
+      .then(function(data) {
+        const showData = normalizeShows(data)
+  
+        // console.log(showData)
+        res.render('shows', showData);
+      })
+  });
+>>>>>>> 8e17d08cb3c687d8d93c83d3972e35466d574946
 
 app.listen(3000, function() {
   console.log('server is listening to port 3000');

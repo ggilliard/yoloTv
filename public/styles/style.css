@@ -1,5 +1,5 @@
 html {
-  background: url(yoloTv/images/yoloTv.png) no-repeat center center fixed;
+  background: url(./images/yoloTv.png) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -13,11 +13,10 @@ body {
 
 .header {
     background-color: rgba(0,0,0,0.7);
-    text:color:white;
+    color: white;
     color: white;
     margin: 0 auto;
     text-align: center;
-
 }
 
 .searchBar input[type=text] {
