@@ -13,11 +13,10 @@ body {
 
 .header {
     background-color: rgba(0,0,0,0.7);
-    text:color:white;
+    color: white;
     color: white;
     margin: 0 auto;
     text-align: center;
-
 }
 
 .searchBar input[type=text] {
