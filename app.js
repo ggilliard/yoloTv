@@ -75,18 +75,6 @@ function getShowSeries(token, series) {
   });
 }
 
-// function getShowSeries(token, seriesId) {
-//   var options = getRequestOptions(`https://api.thetvdb.com/series/${seriesId}/images/query`, token, { keyType: 'fanart' });
-//
-//   return request(options).then(function(seriesImage) {
-//
-//     console.log(options);
-//     return seriesImage;
-//
-//     console.log(seriesImage);
-//   });
-// }
-
 app.get('/:series', function(req, res) {
   const series = req.params.series;
   let _jwt_token;
