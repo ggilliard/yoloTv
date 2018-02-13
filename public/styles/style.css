@@ -17,6 +17,7 @@ body {
     color: white;
     margin: 0 auto;
     text-align: center;
+    text-shadow: 3px 2px coral;
 }
 
 .searchBar input[type=text] {
@@ -26,18 +27,22 @@ body {
     margin-top: 8px;
     margin-right: 84%;
     font-size: 17px;
-    background-color: coral;
+    background-color: KHAKI;
     border-radius: 12px;
 }
 
-.buttons {
-    background-color: coral;
-    font-size: 16px;
-    position: relative;
-    left: 92%;
-    bottom: 35px;
+input[type=submit] {
+    background-color: KHAKI;
+    font-size: 13px;
     padding: 6px;
-    border-radius: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    position: relative;
+    left: 3px;
+    top: 5px;
+}
 
-
+.shows-container {
+  background-color: rgba(0,0,0,0.7);
+  color: white;
 }
