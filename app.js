@@ -93,11 +93,11 @@ app.post("/search", function(req, res){
   var series = req.body.userInput;
 
   let _jwt_token;
-  
+
   getJwtToken()
     .then(function(token) {
       _jwt_token = token;
-  
+
       // console.log(token)
         return getShowSeries(_jwt_token, series)
       })
@@ -109,13 +109,13 @@ app.post("/search", function(req, res){
       const result = {
         show: showData
       }
-  
+
        // console.log(showSeries.data);
       res.render('shows', result);
       })
 })
 
-  
+
 app.listen(3000, function() {
   console.log('server is listening to port 3000');
 });
